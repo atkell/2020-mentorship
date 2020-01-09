@@ -16,27 +16,58 @@
 class Coffee
 {
     public $salesTax = 0.07;
-    public $weight;
-    public $unitCost;
+    public $weight = 0.0;
+    public $unitCost = 0.0;
 
+    public function askUserForOrderDetails()
+    {
+        $this->askUserForCoffeeWeight();
+        $this->askUserForCoffeeUnitCost();
+    }
 
-    public function __construct($weight, $unitCost)
+    public function askUserForCoffeeWeight()
+    {
+        echo "Tell me how many pounds of coffee you want to buy? ";
+        $userInputCoffeeWeight = floatval(fgets(STDIN));
+        if ($userInputCoffeeWeight <= 0.0) {
+//            throw new Exception('Weight must be a number greater than 0!');
+            echo "\nUh oh! Coffee weight must be a number and greater than 0.0\n";
+            $this->askUserForCoffeeWeight();
+        }
+        $this->setCoffeeWeight($userInputCoffeeWeight);
+    }
+
+    public function setCoffeeWeight($weight)
     {
         $this->weight = $weight;
-        $this->validateInput($weight);
-
-        $this->unitCost = $unitCost;
-        $this->validateInput($unitCost);
     }
 
-
-    public function validateInput($input)
+    public function askUserForCoffeeUnitCost()
     {
-        if ($input <= 0.0) {
-            echo "I'm sorry, but {$input} is not a valid input.";
-            die();
+        echo "Tell me how many pounds of coffee you want to buy? ";
+        $userInputCoffeeUnitCost = floatval(fgets(STDIN));
+        if ($userInputCoffeeUnitCost <= 0.0) {
+//            throw new Exception('Unit cost must be a number greater than 0!');
+            echo "\nUh oh! Coffee unit cost must be a number and greater than 0.0\n";
+            $this->askUserForCoffeeUnitCost();
         }
+        $this->setCoffeeUnitCost($userInputCoffeeUnitCost);
     }
+
+
+    public function setCoffeeUnitCost($unitCost)
+    {
+        $this->unitCost = $unitCost;
+    }
+
+//    public function validateInput($input)
+//    {
+//        if ($input <= 0.0) {
+//            echo "I'm sorry, but {$input} is not a valid input.";
+////            die();
+//            $this->getOrderDetails();
+//        }
+//    }
 
 
     public function printReceipt()
@@ -54,12 +85,7 @@ class Coffee
     }
 }
 
-//$purchase = new Coffee(9.99,8.99);
-echo "Tell me how many pounds of coffee you want to buy? ";
-$weight = floatval(fgets(STDIN));
 
-echo "Tell me the cost per pound of this coffee? ";
-$unitCost = floatval(fgets(STDIN));
-
-$purchase = new Coffee($weight, $unitCost);
+$purchase = new Coffee();
+$purchase->askUserForOrderDetails();
 $purchase->printReceipt();
