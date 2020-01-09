@@ -27,9 +27,6 @@ class Coffee
 
         $this->unitCost = $unitCost;
         $this->validateInput($unitCost);
-//        $this->salesTax = $salesTax;
-
-//        $this->printReceipt();
     }
 
 
@@ -38,8 +35,6 @@ class Coffee
         if ($input <= 0.0) {
             echo "I'm sorry, but {$input} is not a valid input.";
             die();
-        } else {
-//            $this->printReceipt();
         }
     }
 
