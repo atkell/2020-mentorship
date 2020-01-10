@@ -15,7 +15,7 @@
 
 class Coffee
 {
-    private $salesTax = 0.07;
+    protected $salesTax = 0.07;
     public $weight = 0.0;
     public $unitCost = 0.0;
     private $subTotal = 0.0;
@@ -41,12 +41,6 @@ class Coffee
         $userInputCoffeeUnitCost = floatval(fgets(STDIN));
         $this->setCoffeeUnitCost($userInputCoffeeUnitCost);
     }
-
-    public function setSalesTax($salesTax)
-    {
-        $salesTax = $salesTax + 1;
-        $this->salesTax = $salesTax;
-    }
     
     public function setCoffeeWeight($weight)
     {
@@ -65,20 +59,10 @@ class Coffee
         }
         $this->unitCost = $unitCost;
     }
-    
-    public function setSubTotal()
-    {
-        $this->subTotal = $this->getWeight() * $this->getUnitCost();
-    }
-
-    public function setGrandTotal()
-    {
-        $this->grandTotal = round($this->weight * $this->unitCost * ($this->getSalesTax() + 1.0), 2);
-    }
 
     public function getSalesTax()
     {
-        return $this->salesTax;
+        return $this->salesTax + 1;
     }
 
     public function getWeight()
@@ -93,25 +77,25 @@ class Coffee
     
     public function getSubTotal()
     {
-        return $this->getWeight() * $this->getUnitCost();
+        return round($this->getWeight() * $this->getUnitCost(), 2);
     }
     
     public function getGrandTotal()
     {
-        return $this->getSubTotal() * $this->getSalesTax();
+        return round($this->getSubTotal() * $this->getSalesTax(), 2);
     }
 
     public function printReceipt()
     {
-        echo "\n\n----\n";
+        echo "\n\n-------------------------------\n";
         echo "Thank you for shopping with us!";
-        echo "\n----\n";
+        echo "\n-------------------------------\n";
         echo "Weight (lbs.):           " . $this->getWeight() . "\n";
-        echo "Unit Cost (per lbs.):    " . $this->getUnitCost() . "\n";
-        echo "\n----\n";
+        echo "Unit Cost (per lbs.):    $" . $this->getUnitCost() . "\n";
+        echo "----\n";
         echo "Sub-total:               $" . $this->getSubTotal() . "\n";
         echo "Grand total (w/ tax):    $" . $this->getGrandTotal() . "\n";
-        echo "Sales tax:               " . $this->getSalesTax() . "%\n";
+//        echo "Sales tax:               " . $this->getSalesTax() . "%\n";
         echo "----\n";
     }
 }
