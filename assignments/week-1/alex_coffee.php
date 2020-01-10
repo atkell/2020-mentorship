@@ -1,20 +1,105 @@
 <?php
 
-echo "Let's calculate the cost of your coffee purchase!\n";
-echo "Tell me how many pounds of coffee you want to buy? ";
-$weight = fgets(STDIN);
+# Input validation:
+# what makes it valid?
+# 1) integer => is_numeric — Finds whether a variable is a number or a numeric string. Tip: this will also handle empty
+# 2) greater than 0.0 => $input > 0
+# 3) not empty => $input != ""
+# if input is not valid, let the user know and allow them to try again. we should make this
+# a function too...
 
-echo "\nTell me the cost per pound of this coffee? ";
-$unitCost = fgets(STDIN);
+# Prompting for input in this way will result in a string. We need to cast the input as an integer. If the input is
+# non-numeric or a mix of numeric and alphanumeric, the var_dump() will result in a int == 0, which is great!
+# There's a bug though, that if the number isn't a whole number (like an integer), it wont work.
+# So let's try floatval() instead...
 
-$salesTax = 1.07;
+class Coffee
+{
+    protected $salesTax = 0.07;
+    public $weight = 0.0;
+    public $unitCost = 0.0;
+    private $subTotal = 0.0;
+    private $grandTotal = 0.0;
+    
+    public function takeCustomerOrder()
+    {
+        $this->askUserForCoffeeWeight();
+        $this->askUserForCoffeeUnitCost();
+        $this->printReceipt();
+    }
+    
+    public function askUserForCoffeeWeight()
+    {
+        echo "Hello! How many pounds of coffee would you like to purchase today? ";
+        $userInputCoffeeWeight = floatval(fgets(STDIN));
+        $this->setCoffeeWeight($userInputCoffeeWeight);
+    }
+    
+    public function askUserForCoffeeUnitCost()
+    {
+        echo "What's the cost per pound of those sweet, sweet beans? ";
+        $userInputCoffeeUnitCost = floatval(fgets(STDIN));
+        $this->setCoffeeUnitCost($userInputCoffeeUnitCost);
+    }
+    
+    public function setCoffeeWeight($weight)
+    {
+        if ($weight <= 0.0) {
+            echo "\nUh oh! Our coffee beans aren't gravity defying...yet.\nTry again with a value greater than 0.\n\n";
+            $this->askUserForCoffeeWeight();
+        }
+        $this->weight = $weight;
+    }
 
-$subTotal = $weight * $unitCost;
+    public function setCoffeeUnitCost($unitCost)
+    {
+        if ($unitCost <= 0.0) {
+            echo "\nUh oh! Coffee unit cost must be a number and greater than 0.0\n";
+            $this->askUserForCoffeeUnitCost();
+        }
+        $this->unitCost = $unitCost;
+    }
 
-$totalCost = $subTotal * $salesTax;
+    public function getSalesTax()
+    {
+        return $this->salesTax + 1;
+    }
 
-echo "----\n";
-echo "Sub-total:               $" . round($subTotal, 2) . "\n";
-echo "Grand total (w/ tax):    $" . round($totalCost, 2) . "\n";
-echo "Sales tax:               7.0%\n";
-echo "----\n";
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    public function getUnitCost()
+    {
+        return $this->unitCost;
+    }
+    
+    public function getSubTotal()
+    {
+        return round($this->getWeight() * $this->getUnitCost(), 2);
+    }
+    
+    public function getGrandTotal()
+    {
+        return round($this->getSubTotal() * $this->getSalesTax(), 2);
+    }
+
+    public function printReceipt()
+    {
+        echo "\n\n-------------------------------\n";
+        echo "Thank you for shopping with us!";
+        echo "\n-------------------------------\n";
+        echo "Weight (lbs.):           " . $this->getWeight() . "\n";
+        echo "Unit Cost (per lbs.):    $" . $this->getUnitCost() . "\n";
+        echo "----\n";
+        echo "Sub-total:               $" . $this->getSubTotal() . "\n";
+        echo "Grand total (w/ tax):    $" . $this->getGrandTotal() . "\n";
+//        echo "Sales tax:               " . $this->getSalesTax() . "%\n";
+        echo "----\n";
+    }
+}
+
+
+$purchase = new Coffee();
+$purchase->takeCustomerOrder();
