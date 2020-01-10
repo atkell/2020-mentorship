@@ -27,36 +27,36 @@ class Coffee
 
     public function askUserForCoffeeWeight()
     {
-        echo "Tell me how many pounds of coffee you want to buy? ";
+        echo "Hello! How many pounds of coffee would you like to purchase today? ";
         $userInputCoffeeWeight = floatval(fgets(STDIN));
-        if ($userInputCoffeeWeight <= 0.0) {
-//            throw new Exception('Weight must be a number greater than 0!');
-            echo "\nUh oh! Coffee weight must be a number and greater than 0.0\n";
-            $this->askUserForCoffeeWeight();
-        }
         $this->setCoffeeWeight($userInputCoffeeWeight);
     }
 
     public function setCoffeeWeight($weight)
     {
+        if ($weight <= 0.0) {
+//            throw new Exception('Weight must be a number greater than 0!');
+            echo "\nUh oh! Our coffee beans aren't gravity defying...yet.\nTry again with a value greater than 0.\n\n";
+            $this->askUserForCoffeeWeight();
+        }
         $this->weight = $weight;
     }
 
     public function askUserForCoffeeUnitCost()
     {
-        echo "Tell me how many pounds of coffee you want to buy? ";
+        echo "What's the cost per pound of those sweet, sweet beans? ";
         $userInputCoffeeUnitCost = floatval(fgets(STDIN));
-        if ($userInputCoffeeUnitCost <= 0.0) {
-//            throw new Exception('Unit cost must be a number greater than 0!');
-            echo "\nUh oh! Coffee unit cost must be a number and greater than 0.0\n";
-            $this->askUserForCoffeeUnitCost();
-        }
         $this->setCoffeeUnitCost($userInputCoffeeUnitCost);
     }
 
 
     public function setCoffeeUnitCost($unitCost)
     {
+        if ($unitCost <= 0.0) {
+//          throw new Exception('Unit cost must be a number greater than 0!');
+            echo "\nUh oh! Coffee unit cost must be a number and greater than 0.0\n";
+            $this->askUserForCoffeeUnitCost();
+        }
         $this->unitCost = $unitCost;
     }
 
