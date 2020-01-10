@@ -15,33 +15,26 @@
 
 class Coffee
 {
-    public $salesTax = 0.07;
+    private $salesTax = 0.07;
     public $weight = 0.0;
     public $unitCost = 0.0;
-
-    public function askUserForOrderDetails()
+    private $subTotal = 0.0;
+    private $grandTotal = 0.0;
+    
+    public function takeCustomerOrder()
     {
         $this->askUserForCoffeeWeight();
         $this->askUserForCoffeeUnitCost();
+        $this->printReceipt();
     }
-
+    
     public function askUserForCoffeeWeight()
     {
         echo "Hello! How many pounds of coffee would you like to purchase today? ";
         $userInputCoffeeWeight = floatval(fgets(STDIN));
         $this->setCoffeeWeight($userInputCoffeeWeight);
     }
-
-    public function setCoffeeWeight($weight)
-    {
-        if ($weight <= 0.0) {
-//            throw new Exception('Weight must be a number greater than 0!');
-            echo "\nUh oh! Our coffee beans aren't gravity defying...yet.\nTry again with a value greater than 0.\n\n";
-            $this->askUserForCoffeeWeight();
-        }
-        $this->weight = $weight;
-    }
-
+    
     public function askUserForCoffeeUnitCost()
     {
         echo "What's the cost per pound of those sweet, sweet beans? ";
@@ -49,43 +42,80 @@ class Coffee
         $this->setCoffeeUnitCost($userInputCoffeeUnitCost);
     }
 
+    public function setSalesTax($salesTax)
+    {
+        $salesTax = $salesTax + 1;
+        $this->salesTax = $salesTax;
+    }
+    
+    public function setCoffeeWeight($weight)
+    {
+        if ($weight <= 0.0) {
+            echo "\nUh oh! Our coffee beans aren't gravity defying...yet.\nTry again with a value greater than 0.\n\n";
+            $this->askUserForCoffeeWeight();
+        }
+        $this->weight = $weight;
+    }
 
     public function setCoffeeUnitCost($unitCost)
     {
         if ($unitCost <= 0.0) {
-//          throw new Exception('Unit cost must be a number greater than 0!');
             echo "\nUh oh! Coffee unit cost must be a number and greater than 0.0\n";
             $this->askUserForCoffeeUnitCost();
         }
         $this->unitCost = $unitCost;
     }
+    
+    public function setSubTotal()
+    {
+        $this->subTotal = $this->getWeight() * $this->getUnitCost();
+    }
 
-//    public function validateInput($input)
-//    {
-//        if ($input <= 0.0) {
-//            echo "I'm sorry, but {$input} is not a valid input.";
-////            die();
-//            $this->getOrderDetails();
-//        }
-//    }
+    public function setGrandTotal()
+    {
+        $this->grandTotal = round($this->weight * $this->unitCost * ($this->getSalesTax() + 1.0), 2);
+    }
 
+    public function getSalesTax()
+    {
+        return $this->salesTax;
+    }
+
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    public function getUnitCost()
+    {
+        return $this->unitCost;
+    }
+    
+    public function getSubTotal()
+    {
+        return $this->getWeight() * $this->getUnitCost();
+    }
+    
+    public function getGrandTotal()
+    {
+        return $this->getSubTotal() * $this->getSalesTax();
+    }
 
     public function printReceipt()
     {
         echo "\n\n----\n";
         echo "Thank you for shopping with us!";
         echo "\n----\n";
-        echo "Weight (lbs.):           " . $this->weight . "\n";
-        echo "Unit Cost (per lbs.):    " . $this->unitCost;
+        echo "Weight (lbs.):           " . $this->getWeight() . "\n";
+        echo "Unit Cost (per lbs.):    " . $this->getUnitCost() . "\n";
         echo "\n----\n";
-        echo "Sub-total:               $" . round($this->weight * $this->unitCost, 2) . "\n";
-        echo "Grand total (w/ tax):    $" . round($this->weight * $this->unitCost * ($this->salesTax + 1.0), 2) . "\n";
-        echo "Sales tax:               7.0%\n";
+        echo "Sub-total:               $" . $this->getSubTotal() . "\n";
+        echo "Grand total (w/ tax):    $" . $this->getGrandTotal() . "\n";
+        echo "Sales tax:               " . $this->getSalesTax() . "%\n";
         echo "----\n";
     }
 }
 
 
 $purchase = new Coffee();
-$purchase->askUserForOrderDetails();
-$purchase->printReceipt();
+$purchase->takeCustomerOrder();
